@@ -53,6 +53,7 @@
 #include "x86.h"
 
 #if (defined(__ARM_NEON__) || defined(__ARM_NEON))
+#include "contrib/optimizations/fill_window_arm.h"
 #include "contrib/optimizations/slide_hash_neon.h"
 #endif
 /* We need crypto extension crc32 to implement optimized hash in
@@ -1572,6 +1573,11 @@ local void fill_window(deflate_state *s)
         fill_window_sse(s);
         return;
     }
+
+#if (defined(__ARM_NEON__) || defined(__ARM_NEON))
+    fill_window_arm(s);
+    return;
+#endif
 
     fill_window_c(s);
 }
