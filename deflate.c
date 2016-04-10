@@ -54,6 +54,7 @@
 #include "contrib/optimizations/insert_string.h"
 
 #if (defined(__ARM_NEON__) || defined(__ARM_NEON))
+#include "contrib/optimizations/fill_window_arm.h"
 #include "contrib/optimizations/slide_hash_neon.h"
 #endif
 #if defined(CRC32_ARMV8_CRC32)
@@ -1526,6 +1527,10 @@ local void fill_window(deflate_state *s)
         fill_window_sse(s);
         return;
     }
+#endif
+#if (defined(__ARM_NEON__) || defined(__ARM_NEON))
+    fill_window_arm(s);
+    return;
 #endif
     fill_window_c(s);
 }
