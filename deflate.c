@@ -53,10 +53,6 @@
 #include "cpu_features.h"
 #include "contrib/optimizations/insert_string.h"
 
-#if (defined(__ARM_NEON__) || defined(__ARM_NEON))
-#include "contrib/optimizations/fill_window_arm.h"
-#include "contrib/optimizations/slide_hash_neon.h"
-#endif
 #if defined(CRC32_ARMV8_CRC32)
 #include "crc32_simd.h"
 #endif
@@ -176,6 +172,12 @@ local const config configuration_table[10] = {
 #define CLEAR_HASH(s) \
     s->head[s->hash_size-1] = NIL; \
     zmemzero((Bytef *)s->head, (unsigned)(s->hash_size-1)*sizeof(*s->head));
+
+#if (defined(__ARM_NEON__) || defined(__ARM_NEON))
+#include "contrib/optimizations/fill_window_arm.h"
+#include "contrib/optimizations/longest_match_arm.h"
+#include "contrib/optimizations/slide_hash_neon.h"
+#endif
 
 /* ===========================================================================
  * Slide the hash table when sliding the window down (could be avoided with 32
@@ -1276,6 +1278,9 @@ local uInt longest_match(s, cur_match)
     deflate_state *s;
     IPos cur_match;                             /* current match */
 {
+#if (defined(__ARM_NEON__) || defined(__ARM_NEON))
+    return longest_match_arm(s, cur_match);
+#endif
     unsigned chain_length = s->max_chain_length;/* max hash chain length */
     register Bytef *scan = s->window + s->strstart; /* current string */
     register Bytef *match;                      /* matched string */
