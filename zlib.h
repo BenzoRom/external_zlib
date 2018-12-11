@@ -1756,18 +1756,16 @@ ZEXTERN uLong ZEXPORT crc32_combine OF((uLong crc1, uLong crc2, z_off_t len2));
 */
 
 /*
-ZEXTERN void ZEXPORT crc32_combine_gen OF((z_crc_t op[32], z_off_t len2));
-     Generate the operator op corresponding to length len2, to be used with
-   crc32_combine_op(). op must have room for 32 z_crc_t values. (32 is the
-   number of bits in the CRC.)
+ZEXTERN uLong ZEXPORT crc32_combine_gen OF((z_off_t len2));
+     Return the operator corresponding to length len2, to be used with
+   crc32_combine_op().
 */
 
-ZEXTERN uLong ZEXPORT crc32_combine_op OF((uLong crc1, uLong crc2,
-                                           const z_crc_t *op));
+ZEXTERN uLong ZEXPORT crc32_combine_op OF((uLong crc1, uLong crc2, uLong op));
 /*
      Give the same result as crc32_combine(), using op in place of len2. op is
    is generated from len2 by crc32_combine_gen(). This will be faster than
-   crc32_combine() if the generated op is used many times.
+   crc32_combine() if the generated op is used more than once.
 */
 
                         /* various hacks, don't look :) */
@@ -1861,7 +1859,7 @@ ZEXTERN int ZEXPORT gzgetc_ OF((gzFile file));  /* backward compatibility */
    ZEXTERN z_off64_t ZEXPORT gzoffset64 OF((gzFile));
    ZEXTERN uLong ZEXPORT adler32_combine64 OF((uLong, uLong, z_off64_t));
    ZEXTERN uLong ZEXPORT crc32_combine64 OF((uLong, uLong, z_off64_t));
-   ZEXTERN void ZEXPORT crc32_combine_gen64 OF((z_crc_t *op, z_off64_t));
+   ZEXTERN uLong ZEXPORT crc32_combine_gen64 OF((z_off64_t));
 #endif
 
 #if !defined(ZLIB_INTERNAL) && defined(Z_WANT64)
@@ -1907,7 +1905,7 @@ ZEXTERN int ZEXPORT gzgetc_ OF((gzFile file));  /* backward compatibility */
      ZEXTERN z_off_t ZEXPORT gzoffset64 OF((gzFile));
      ZEXTERN uLong ZEXPORT adler32_combine64 OF((uLong, uLong, z_off_t));
      ZEXTERN uLong ZEXPORT crc32_combine64 OF((uLong, uLong, z_off_t));
-     ZEXTERN void ZEXPORT crc32_combine_gen64 OF((z_crc_t *op, z_off_t));
+     ZEXTERN uLong ZEXPORT crc32_combine_gen64 OF((z_off_t));
 #  endif
 #else
    ZEXTERN gzFile ZEXPORT gzopen OF((const char *, const char *));
@@ -1916,14 +1914,14 @@ ZEXTERN int ZEXPORT gzgetc_ OF((gzFile file));  /* backward compatibility */
    ZEXTERN z_off_t ZEXPORT gzoffset OF((gzFile));
    ZEXTERN uLong ZEXPORT adler32_combine OF((uLong, uLong, z_off_t));
    ZEXTERN uLong ZEXPORT crc32_combine OF((uLong, uLong, z_off_t));
-   ZEXTERN void ZEXPORT crc32_combine_gen OF((z_crc_t *op, z_off_t));
+   ZEXTERN uLong ZEXPORT crc32_combine_gen OF((z_off_t));
 #endif
 
 #else /* Z_SOLO */
 
    ZEXTERN uLong ZEXPORT adler32_combine OF((uLong, uLong, z_off_t));
    ZEXTERN uLong ZEXPORT crc32_combine OF((uLong, uLong, z_off_t));
-   ZEXTERN void ZEXPORT crc32_combine_gen OF((z_crc_t *op, z_off_t));
+   ZEXTERN uLong ZEXPORT crc32_combine_gen OF((z_off_t));
 
 #endif /* !Z_SOLO */
 
