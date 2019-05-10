@@ -18,6 +18,8 @@ cc_library {
         "-DUNALIGNED_OK",
         "-Wall",
         "-Werror",
+        "-Wno-error=attributes",
+        "-Wno-attributes",
     ],
     stl: "none",
     export_include_dirs: [
