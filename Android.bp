@@ -10,8 +10,6 @@ cc_library {
         enabled: true,
         support_system_process: true,
     },
-    recovery_available: true,
-    native_bridge_supported: true,
 
     cflags: [
         "-O3",
@@ -21,6 +19,8 @@ cc_library {
         "-Werror",
         "-Wno-unused",
         "-Wno-unused-parameter",
+        "-Wno-error=attributes",
+        "-Wno-attributes",
     ],
     stl: "none",
     export_include_dirs: ["."],
@@ -71,7 +71,11 @@ cc_library {
 cc_binary_host {
     name: "minigzip",
     srcs: ["contrib/minigzip/minigzip.c"],
-    cflags: ["-Wall", "-Werror", "-DUSE_MMAP"],
+    cflags: [
+        "-Wall",
+        "-Werror",
+        "-DUSE_MMAP",
+    ],
     static_libs: ["libz"],
     stl: "none",
 }
@@ -79,7 +83,10 @@ cc_binary_host {
 cc_binary {
     name: "zlib_bench",
     srcs: ["contrib/bench/zlib_bench.cc"],
-    cflags: ["-Wall", "-Werror"],
+    cflags: [
+        "-Wall",
+        "-Werror",
+    ],
     host_supported: true,
     shared_libs: ["libz"],
 }
