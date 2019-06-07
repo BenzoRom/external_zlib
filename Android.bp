@@ -55,6 +55,53 @@ cc_library {
             // is fixed.
             pack_relocations: false,
             ldflags: ["-Wl,--hash-style=both"],
+
+            cflags: [
+                "-DARMV8_OS_ANDROID",
+                "-DADLER32_SIMD_NEON",
+                "-DCRC32_ARMV8_CRC32",
+                "-DINFLATE_CHUNK_SIMD_NEON",
+            ],
+
+            static_libs: ["cpufeatures"],
+            export_include_dirs: [
+                "contrib/optimizations/",
+            ],
+
+            srcs: [
+                "arm_features.c",
+                "adler32_simd.c",
+                "crc32_simd.c",
+                "contrib/optimizations/inffast_chunk.c",
+                "contrib/optimizations/inflate.c",
+            ],
+            exclude_srcs: [
+                "inflate.c",
+            ],
+        },
+        arm64: {
+            cflags: [
+                "-DARMV8_OS_ANDROID",
+                "-DADLER32_SIMD_NEON",
+                "-DCRC32_ARMV8_CRC32",
+                "-DINFLATE_CHUNK_SIMD_NEON",
+            ],
+
+            static_libs: ["cpufeatures"],
+            export_include_dirs: [
+                "contrib/optimizations/",
+            ],
+
+            srcs: [
+                "arm_features.c",
+                "adler32_simd.c",
+                "crc32_simd.c",
+                "contrib/optimizations/inffast_chunk.c",
+                "contrib/optimizations/inflate.c",
+            ],
+            exclude_srcs: [
+                "inflate.c",
+            ],
         },
     },
 
