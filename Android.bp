@@ -86,6 +86,7 @@ cc_library {
                 "-DADLER32_SIMD_NEON",
                 "-DCRC32_ARMV8_CRC32",
                 "-DINFLATE_CHUNK_SIMD_NEON",
+                "-DINFLATE_CHUNK_READ_64LE",
             ],
 
             static_libs: ["cpufeatures"],
