@@ -58,13 +58,12 @@ cc_library {
             ldflags: ["-Wl,--hash-style=both"],
 
             cflags: [
-                "-DARMV8_OS_ANDROID",
+                "-DARMV8_OS_LINUX",
                 "-DADLER32_SIMD_NEON",
                 "-DCRC32_ARMV8_CRC32",
                 "-DINFLATE_CHUNK_SIMD_NEON",
             ],
 
-            static_libs: ["cpufeatures"],
             export_include_dirs: [
                 "contrib/optimizations/",
             ],
@@ -82,14 +81,13 @@ cc_library {
         },
         arm64: {
             cflags: [
-                "-DARMV8_OS_ANDROID",
+                "-DARMV8_OS_LINUX",
                 "-DADLER32_SIMD_NEON",
                 "-DCRC32_ARMV8_CRC32",
                 "-DINFLATE_CHUNK_SIMD_NEON",
                 "-DINFLATE_CHUNK_READ_64LE",
             ],
 
-            static_libs: ["cpufeatures"],
             export_include_dirs: [
                 "contrib/optimizations/",
             ],
