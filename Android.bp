@@ -1,9 +1,7 @@
 srcs_opt = [
     "adler32_simd.c",
-    // See https://chromium-review.googlesource.com/749732.
-// TODO: causes `atest org.apache.harmony.tests.java.util.zip.DeflaterTest` failures.
-//    "contrib/optimizations/inffast_chunk.c",
-//    "contrib/optimizations/inflate.c",
+    "contrib/optimizations/inffast_chunk.c",
+    "contrib/optimizations/inflate.c",
     // This file doesn't build for non-neon, so it can't be in the main srcs.
     "cpu_features.c",
     "crc32_simd.c",
@@ -21,8 +19,7 @@ cflags_arm = [
 cflags_arm_neon = [
     // We no longer support non-Neon platform builds, but the NDK just has one libz.
     "-DADLER32_SIMD_NEON",
-// TODO: causes `atest org.apache.harmony.tests.java.util.zip.DeflaterTest` failures.
-//    "-DINFLATE_CHUNK_SIMD_NEON",
+    "-DINFLATE_CHUNK_SIMD_NEON",
     // HWCAP_CRC32 is checked at runtime, so it's okay to turn crc32
     // acceleration on for both 32- and 64-bit.
     "-DCRC32_ARMV8_CRC32",
@@ -70,6 +67,8 @@ cc_defaults {
         "-Werror",
         "-Wno-unused",
         "-Wno-unused-parameter",
+        "-Wno-error=attributes",
+        "-Wno-attributes",
     ],
     stl: "none",
     export_include_dirs: ["."],
@@ -102,7 +101,7 @@ cc_defaults {
             neon: {
                 cflags: cflags_arm_neon,
                 srcs: srcs_opt,
-            }
+            },
         },
         arm64: {
             cflags: cflags_arm64 + cflags_64,
@@ -132,9 +131,7 @@ cc_library {
         enabled: true,
         support_system_process: true,
     },
-    ramdisk_available: true,
     recovery_available: true,
-    native_bridge_supported: true,
 
     target: {
         linux_bionic: {
@@ -157,7 +154,11 @@ cc_library_static {
 cc_binary_host {
     name: "minigzip",
     srcs: ["contrib/minigzip/minigzip.c"],
-    cflags: ["-Wall", "-Werror", "-DUSE_MMAP"],
+    cflags: [
+        "-Wall",
+        "-Werror",
+        "-DUSE_MMAP",
+    ],
     static_libs: ["libz"],
     stl: "none",
 }
@@ -165,14 +166,21 @@ cc_binary_host {
 cc_binary {
     name: "zlib_bench",
     srcs: ["contrib/bench/zlib_bench.cc"],
-    cflags: ["-Wall", "-Werror"],
+    cflags: [
+        "-Wall",
+        "-Werror",
+    ],
     host_supported: true,
     shared_libs: ["libz"],
     // We build zlib_bench32 and zlib_bench64 so it's easy to test LP32.
     compile_multilib: "both",
     multilib: {
-        lib32: { suffix: "32", },
-        lib64: { suffix: "64", },
+        lib32: {
+            suffix: "32",
+        },
+        lib64: {
+            suffix: "64",
+        },
     },
 }
 
